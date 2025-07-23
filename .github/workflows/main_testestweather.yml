@@ -29,11 +29,14 @@ jobs:
       - name: dotnet publish
         run: dotnet publish -c Release -o publish
 
+      - name: Zip published output
+        run: Compress-Archive -Path publish/* -DestinationPath publish.zip
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
-          name: .net-app
-          path: publish
+          name: app-package
+          path: publish.zip
 
   deploy:
     runs-on: windows-latest
@@ -46,7 +49,8 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
-          name: .net-app
+          name: app-package
+          path: .
       
       - name: Login to Azure
         uses: azure/login@v2
@@ -61,5 +65,5 @@ jobs:
         with:
           app-name: 'testestweather'
           slot-name: 'Production'
-          package: ./.net-app
+          package: publish.zip
           
