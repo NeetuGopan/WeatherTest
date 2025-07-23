@@ -27,7 +27,7 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o publish
+        run: dotnet publish WebApplication2.csproj -c Release -o publish
 
       - name: Zip published output
         run: Compress-Archive -Path publish/* -DestinationPath publish.zip
